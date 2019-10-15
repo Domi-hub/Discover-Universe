@@ -2,7 +2,7 @@
     new Vue({
         el: "#main",
         data: {
-            title: "Latest Images",
+            // title: "Latest Images",
             images: [],
             username: "",
             desc: "",
@@ -36,7 +36,14 @@
                 fd.append("username", this.username);
                 fd.append("title", this.title);
                 fd.append("desc", this.desc);
-                axios.post("/upload", fd).then(function(res) {});
+                axios
+                    .post("/upload", fd)
+                    .then(function(res) {
+                        //unshift the new image into the array
+                    })
+                    .catch(function() {
+                        me.error = true;
+                    });
 
                 // axios.post("/some-route", {
                 //     username: username,

@@ -2,16 +2,17 @@
 <html>
 <head>
     <title></title>
+    <link rel="stylesheet" href="stylesheet.css" />
 </head>
 <body>
     <div id="main">
-        <input v-model="username" name="username">
-        <input v-model="title" name="title">
-        <input v-model="desc" name="description">
+        <input v-model="username" name="username" placeholder="username">
+        <input v-model="title" name="title" placeholder="title">
+        <input v-model="desc" name="description" pleaceholder="description">
         <input type="file" accept="image/*" @change="fileSelected">
         <button @click="upload">upload</button>
 
-        <h3 :title="title">{{ title }}</h3>
+        <!-- <h3 :title="title">{{ title }}</h3> -->
 
         <div>
             <img v-for="image in images" :src="image.url" />

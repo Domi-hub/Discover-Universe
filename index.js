@@ -4,6 +4,8 @@ const db = require("./db");
 const multer = require("multer");
 const uidSafe = require("uid-safe"); //generates guaranteed unique ids
 const path = require("path");
+const s3 = require("./s3");
+const { s3Url } = require("./config");
 
 const diskStorage = multer.diskStorage({
     destination: function(req, file, callback) {
@@ -25,15 +27,24 @@ const uploader = multer({
 
 uidSafe(24).then(console.log);
 
-app.post("/upload", uploader.single("image"), function(req, res) {
-    if (req.file) {
-        const { username, desc, title } = req.body;
-        res.sendStatus(200);
-        //it worked
-    } else {
-        //not worked
-        res.sendStatus(500);
-    }
+app.post("/upload", uploader.single("image"), s3.upload, function(req, res) {
+    const { username, title, desc } = req.body;
+    const imageUrl = `${s3Url}/${req.file.filename}`;
+    db.addImage(username, title, desc, imageUrl)
+        .then(function({ rows }) {
+            res.json({
+                username,
+                title,
+                desc,
+                imageUrl,
+                id: rows[0].id
+            });
+            // send image info to client
+        })
+        .catch(function(err) {
+            console.log(err);
+            res.sendStatus(500);
+        });
 });
 
 app.use(express.static("./public"));
