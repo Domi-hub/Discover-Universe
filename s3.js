@@ -15,12 +15,13 @@ const s3 = new aws.S3({
 
 exports.upload = function(req, res, next) {
     if (!req.file) {
+        console.log("no file");
         res.sendStatus(500);
         return;
     }
     const { filename, mimetype, size, path } = req.file; //mimetype =content type,
     s3.putObject({
-        Bucket: myBucketName, //bucket name from Amazon
+        Bucket: "spicedling", //bucket name from Amazon
         ACL: "public-read", // everybody who has url can see pictures
         Key: filename, // file/object name
         Body: fs.createReadStream(path),

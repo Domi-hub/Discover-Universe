@@ -10,3 +10,14 @@ module.exports.getImages = () => {
         `
     );
 };
+
+module.exports.addImage = (username, title, desc, imageUrl) => {
+    return db.query(
+        `
+        INSERT INTO images (username, title, description, url)
+        VALUES($1, $2, $3, $4)
+        RETURNING id
+        `,
+        [username, title, desc, imageUrl]
+    );
+};

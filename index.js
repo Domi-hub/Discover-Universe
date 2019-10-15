@@ -29,14 +29,16 @@ uidSafe(24).then(console.log);
 
 app.post("/upload", uploader.single("image"), s3.upload, function(req, res) {
     const { username, title, desc } = req.body;
-    const imageUrl = `${s3Url}/${req.file.filename}`;
+    const imageUrl = `${s3Url}${req.file.filename}`;
+
+    console.log(imageUrl);
     db.addImage(username, title, desc, imageUrl)
         .then(function({ rows }) {
             res.json({
                 username,
                 title,
                 desc,
-                imageUrl,
+                url: imageUrl,
                 id: rows[0].id
             });
             // send image info to client

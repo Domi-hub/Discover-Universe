@@ -30,6 +30,7 @@
         },
         methods: {
             upload: function() {
+                var myVue = this;
                 console.log(this.username, this.title, this.desc, this.file);
                 var fd = new FormData();
                 fd.append("image", this.file);
@@ -40,9 +41,10 @@
                     .post("/upload", fd)
                     .then(function(res) {
                         //unshift the new image into the array
+                        myVue.images.unshift(res.data);
                     })
                     .catch(function() {
-                        me.error = true;
+                        myVue.error = true;
                     });
 
                 // axios.post("/some-route", {
