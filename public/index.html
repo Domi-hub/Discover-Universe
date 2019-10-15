@@ -4,7 +4,22 @@
     <title></title>
 </head>
 <body>
+    <div id="main">
+        <input v-model="username" name="username">
+        <input v-model="title" name="title">
+        <input v-model="desc" name="description">
+        <input type="file" accept="image/*" @change="fileSelected">
+        <button @click="upload">upload</button>
+
+        <h3 :title="title">{{ title }}</h3>
+
+        <div>
+            <img v-for="image in images" :src="image.url" />
+        </div>
+    </div>
+
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
+    <script src="/js/script.js"></script>
 </body>
 </html>
