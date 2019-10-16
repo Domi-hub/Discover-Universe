@@ -6,18 +6,31 @@
 </head>
 <body>
     <div id="main">
+
+        <first-component :selected-image="selectedImage" @close="closeMe" v-if="selectedImage"></first-component>
+
         <input v-model="username" name="username" placeholder="username">
         <input v-model="title" name="title" placeholder="title">
         <input v-model="desc" name="description" pleaceholder="description">
         <input type="file" accept="image/*" @change="fileSelected">
         <button @click="upload">upload</button>
 
-        <!-- <h3 :title="title">{{ title }}</h3> -->
-
         <div>
-            <img v-for="image in images" :src="image.url" />
+            <img @click="selectedImage=image.id" v-for="image in images" :src="image.url" />
         </div>
+
     </div>
+
+    <script type="text/x-template" id="template">
+        <div class="component">
+            <button @click="close">X</button>
+            <h1> {{ image.title }}</h1>
+            <img :src="image.url">
+            <p> {{ image.description }} </p>
+            <p> {{ image.username }} </p>
+            <p> {{ image.created_at }} </p>
+        </div>
+    </script>
 
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>

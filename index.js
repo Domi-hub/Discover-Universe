@@ -25,7 +25,7 @@ const uploader = multer({
     }
 });
 
-uidSafe(24).then(console.log);
+uidSafe(24);
 
 app.post("/upload", uploader.single("image"), s3.upload, function(req, res) {
     const { username, title, desc } = req.body;
@@ -55,10 +55,25 @@ app.get("/images", (req, res) => {
     db.getImages()
         .then(({ rows }) => {
             res.json(rows);
-            console.log(rows);
         })
         .catch(err => {
-            console.log("Error", err);
+            console.log(err);
+            res.sendStatus(500);
+        });
+});
+
+app.get("/image/:imageId", (req, res) => {
+    db.getImageById(req.params.imageId)
+        .then(({ rows }) => {
+            if (rows.length < 1) {
+                res.sendStatus(404);
+                return;
+            }
+            res.json(rows[0]);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
         });
 });
 
