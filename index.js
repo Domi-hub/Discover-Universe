@@ -27,11 +27,11 @@ const uploader = multer({
 
 uidSafe(24);
 
-app.post("/upload", uploader.single("image"), s3.upload, function(req, res) {
+app.post("/upload", uploader.single("image"), s3.upload, (req, res) => {
     const { username, title, desc } = req.body;
     const imageUrl = `${s3Url}${req.file.filename}`;
-
     console.log(imageUrl);
+
     db.addImage(username, title, desc, imageUrl)
         .then(function({ rows }) {
             res.json({
@@ -50,6 +50,7 @@ app.post("/upload", uploader.single("image"), s3.upload, function(req, res) {
 });
 
 app.use(express.static("./public"));
+app.use(express.json());
 
 app.get("/images", (req, res) => {
     db.getImages()
@@ -76,5 +77,36 @@ app.get("/image/:imageId", (req, res) => {
             res.sendStatus(500);
         });
 });
+
+app.post("/image/:imageId/comment", (req, res) => {
+    const { username, message } = req.body;
+    db.addComment(req.params.imageId, username, message)
+        .then(({ rows }) => {
+            if (rows.length < 1) {
+                res.sendStatus(404);
+                return;
+            }
+            res.json(rows[0]);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        });
+});
+
+app.get("/image/:imageId/comments", (req, res) => {
+    db.getComments(req.params.imageId)
+        .then(({ rows }) => {
+            res.json(rows);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        });
+});
+
+// app.post("/", (req, res) => {
+//
+// })
 
 app.listen(8080, () => console.log("Server is listening..."));

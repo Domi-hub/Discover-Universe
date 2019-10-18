@@ -3,16 +3,24 @@
         template: "#template",
         data: function() {
             return {
-                image: {}
+                image: {},
+                comments: [],
+                username: "",
+                message: ""
             };
         },
         props: ["selectedImage"],
         mounted: function() {
-            var myVue = this;
             axios
                 .get("/image/" + this.selectedImage)
                 .then(resp => {
-                    myVue.image = resp.data;
+                    this.image = resp.data;
+
+                    return axios
+                        .get("/image/" + this.selectedImage + "/comments")
+                        .then(resp => {
+                            this.comments = resp.data;
+                        });
                 })
                 .catch(err => {
                     console.log(err);
@@ -20,8 +28,21 @@
         },
         methods: {
             close: function() {
-                console.log("emitting from the component...");
                 this.$emit("close", true);
+            },
+            submitComment: function() {
+                axios
+                    .post("/image/" + this.selectedImage + "/comment", {
+                        username: this.username,
+                        message: this.message
+                    })
+                    .then(res => {
+                        this.comments.push(res.data);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.error = true;
+                    });
             }
         }
     });
@@ -37,11 +58,10 @@
             selectedImage: null
         },
         mounted: function() {
-            var myVue = this;
             axios
                 .get("/images")
                 .then(resp => {
-                    myVue.images = resp.data;
+                    this.images = resp.data;
                 })
                 .catch(err => {
                     console.log(err);
@@ -52,19 +72,19 @@
                 this.selectedImage = null;
             },
             upload: function() {
-                var myVue = this;
-                var fd = new FormData();
-                fd.append("image", this.file);
-                fd.append("username", this.username);
-                fd.append("title", this.title);
-                fd.append("desc", this.desc);
+                var form = new FormData();
+                form.append("image", this.file);
+                form.append("username", this.username);
+                form.append("title", this.title);
+                form.append("desc", this.desc);
                 axios
-                    .post("/upload", fd)
-                    .then(function(res) {
-                        myVue.images.unshift(res.data);
+                    .post("/upload", form)
+                    .then(res => {
+                        this.images.unshift(res.data);
                     })
-                    .catch(function() {
-                        myVue.error = true;
+                    .catch(err => {
+                        console.log(err);
+                        this.error = true;
                     });
             },
             fileSelected: function(e) {

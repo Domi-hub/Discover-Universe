@@ -3,9 +3,9 @@ const fs = require("fs");
 
 let secrets;
 if (process.env.NODE_ENV == "production") {
-    secrets = process.env; // in prod the secrets are environment variables
+    secrets = process.env;
 } else {
-    secrets = require("./secrets"); // in dev they are in secrets.json which is listed in .gitignore
+    secrets = require("./secrets");
 }
 
 const s3 = new aws.S3({
@@ -19,11 +19,11 @@ exports.upload = function(req, res, next) {
         res.sendStatus(500);
         return;
     }
-    const { filename, mimetype, size, path } = req.file; //mimetype =content type,
+    const { filename, mimetype, size, path } = req.file;
     s3.putObject({
-        Bucket: "spicedling", //bucket name from Amazon
-        ACL: "public-read", // everybody who has url can see pictures
-        Key: filename, // file/object name
+        Bucket: "spicedling",
+        ACL: "public-read",
+        Key: filename,
         Body: fs.createReadStream(path),
         ContentType: mimetype,
         ContentLength: size
@@ -34,7 +34,6 @@ exports.upload = function(req, res, next) {
             next();
         })
         .catch(err => {
-            //uh oh
             console.log(err);
             res.sendStatus(500);
         });
