@@ -4,6 +4,7 @@
 
 html {
     background: url(universe.jpeg) no-repeat center center fixed;
+    background-color: black;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -47,26 +48,39 @@ button {
     font-size: 15px;
 }
 
+button:hover {
+    background: black;
+    color: white;
+}
+
 .card-container {
     display: grid;
     max-width: 1300px;
     margin: 24px auto;
     grid-auto-rows: 400px;
     grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    grid-gap: 40px;
+    grid-gap: 30px;
+    padding-left: 60px;
+    padding-top: 30px;
 }
 
 .card {
     border: 2px solid black;
     width: 300px;
-    height: 350px;
+    height: 300px;
     border-radius: 20px;
     background-color: black;
-    opacity: 0.7;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    transition: 0.3s;
+}
+
+.card:hover {
+    -webkit-transform: scale(1.3);
+    -ms-transform: scale(1.3);
+    transform: scale(1.3);
 }
 
 img {
@@ -86,7 +100,8 @@ img {
 }
 
 .more-button {
-    margin-bottom: 50px;
+    margin-bottom: 80px;
+    margin-left: 60px;
     width: 80px;
     height: 30px;
     font-size: 15px;
@@ -99,6 +114,7 @@ img {
     -o-background-size: cover;
     background-size: cover;
     position: fixed;
+    overflow-y: scroll;
     top: 0;
     left: 0px;
     right: 0px;
@@ -107,11 +123,13 @@ img {
     display: flex;
     align-items: center;
     flex-direction: column;
+    padding-bottom: 30px;
 }
 
 .x {
-    margin-left: 750px;
+    margin-left: 1200px;
     width: 40px;
+    opacity: 0.6;
 }
 
 .image-info {
@@ -128,15 +146,23 @@ img {
 }
 
 .modal-img {
-    width: 200px;
+    width: 300px;
     height: 200px;
+    border: 2px solid white;
 }
 
 .comment-message {
-    width: 500px;
-    height: 130px;
+    width: 700px;
+    height: 110px;
     color: black;
     background-color: white;
+    border-radius: 10px;
+    opacity: 0.5;
+    margin-top: 10px;
+}
+
+h2 {
+    padding-left: 100px;
 }
 
 footer {

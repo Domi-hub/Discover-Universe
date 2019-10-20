@@ -107,8 +107,4 @@ app.get("/images/:imageId/comments", (req, res) => {
         });
 });
 
-// app.post("/", (req, res) => {
-//
-// })
-
 app.listen(8080, () => console.log("Server is listening..."));

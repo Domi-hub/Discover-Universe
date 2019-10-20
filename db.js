@@ -12,7 +12,7 @@ module.exports.getImages = () => {
         ) AS lowest_id
         FROM images
         ORDER BY id DESC
-        LIMIT 9;
+        LIMIT 5;
         `
     );
 };
@@ -75,7 +75,7 @@ module.exports.getMoreImages = lastImageId => {
         FROM images
         WHERE id < $1
         ORDER BY id DESC
-        LIMIT 9;
+        LIMIT 5;
         `,
         [lastImageId]
     );

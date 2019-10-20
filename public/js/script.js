@@ -101,6 +101,8 @@
         methods: {
             closeMe: function() {
                 this.selectedImageId = null;
+                location.hash = "";
+                history.replaceState(null, null, " ");
             },
             upload: function() {
                 const myVue = this;
@@ -138,11 +140,6 @@
             },
             fileSelected: function(e) {
                 this.file = e.target.files[0];
-            },
-            closeModal: function() {
-                this.selectedImageId = null;
-                location.hash = "";
-                history.replaceState(null, null, " ");
             }
         }
     });

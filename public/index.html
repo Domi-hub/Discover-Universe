@@ -37,7 +37,7 @@
 
             <first-component :selected-image-id="selectedImageId" @close="closeMe" v-if="selectedImageId"></first-component>
 
-            <footer>Dominika Tazikova</footer>
+            <footer>🌍Dominika Tazikova</footer>
         </div>
 
         <script type="text/x-template" id="template">
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="comments-info">
-                    <h1>Add a Comment!</h1>
+                    <h2>Add a Comment!</h2>
                     <input type="text" v-model="username" name="username" placeholder="username">
                     <input type="text" v-model="message" name="message" placeholder="message">
                     <button @click="submitComment">Submit</button>
