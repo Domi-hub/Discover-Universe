@@ -9,17 +9,18 @@
                 message: ""
             };
         },
-        props: ["selectedImage"],
+        props: ["selectedImageId"],
         mounted: function() {
+            const myVue = this;
             axios
-                .get("/image/" + this.selectedImage)
+                .get("/images/" + myVue.selectedImageId)
                 .then(resp => {
-                    this.image = resp.data;
+                    myVue.image = resp.data;
 
                     return axios
-                        .get("/image/" + this.selectedImage + "/comments")
+                        .get("/images/" + myVue.selectedImageId + "/comments")
                         .then(resp => {
-                            this.comments = resp.data;
+                            myVue.comments = resp.data;
                         });
                 })
                 .catch(err => {
@@ -31,17 +32,39 @@
                 this.$emit("close", true);
             },
             submitComment: function() {
+                const myVue = this;
                 axios
-                    .post("/image/" + this.selectedImage + "/comment", {
-                        username: this.username,
-                        message: this.message
+                    .post("/images/" + myVue.selectedImageId + "/comment", {
+                        username: myVue.username,
+                        message: myVue.message
                     })
                     .then(res => {
-                        this.comments.push(res.data);
+                        myVue.comments.push(res.data);
+                    })
+                    .catch(err => {
+                        myVue.error = true;
+                        console.log(err);
+                    });
+            }
+        },
+        watch: {
+            selectedImageId: function() {
+                const myVue = this;
+                axios
+                    .get("/images/" + this.selectedImageId)
+                    .then(resp => {
+                        myVue.image = resp.data;
+
+                        return axios
+                            .get(
+                                "/images/" + myVue.selectedImageId + "/comments"
+                            )
+                            .then(resp => {
+                                myVue.comments = resp.data;
+                            });
                     })
                     .catch(err => {
                         console.log(err);
-                        this.error = true;
                     });
             }
         }
@@ -51,44 +74,75 @@
         el: "#main",
         data: {
             images: [],
+            hasMoreImages: false,
             username: "",
-            desc: "",
+            description: "",
             title: "",
             file: null,
-            selectedImage: null
+            selectedImageId: location.hash.slice(1)
         },
         mounted: function() {
+            const myVue = this;
             axios
                 .get("/images")
                 .then(resp => {
-                    this.images = resp.data;
+                    myVue.images = resp.data;
+                    const lastImage = myVue.images[myVue.images.length - 1];
+                    myVue.hasMoreImages = lastImage.id > lastImage.lowest_id;
                 })
                 .catch(err => {
                     console.log(err);
                 });
+
+            addEventListener("hashchange", function() {
+                myVue.selectedImageId = location.hash.slice(1);
+            });
         },
         methods: {
             closeMe: function() {
-                this.selectedImage = null;
+                this.selectedImageId = null;
             },
             upload: function() {
+                const myVue = this;
                 var form = new FormData();
                 form.append("image", this.file);
                 form.append("username", this.username);
                 form.append("title", this.title);
-                form.append("desc", this.desc);
+                form.append("desc", this.description);
                 axios
                     .post("/upload", form)
                     .then(res => {
-                        this.images.unshift(res.data);
+                        myVue.images.unshift(res.data);
                     })
                     .catch(err => {
                         console.log(err);
-                        this.error = true;
+                        myVue.error = true;
+                    });
+            },
+            more: function() {
+                const myVue = this;
+                axios
+                    .get(
+                        "/images?lastImageId=" +
+                            myVue.images[myVue.images.length - 1].id
+                    )
+                    .then(resp => {
+                        myVue.images = myVue.images.concat(resp.data);
+                        const lastImage = myVue.images[myVue.images.length - 1];
+                        myVue.hasMoreImages =
+                            lastImage.id > lastImage.lowest_id;
+                    })
+                    .catch(err => {
+                        console.log(err);
                     });
             },
             fileSelected: function(e) {
                 this.file = e.target.files[0];
+            },
+            closeModal: function() {
+                this.selectedImageId = null;
+                location.hash = "";
+                history.replaceState(null, null, " ");
             }
         }
     });

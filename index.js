@@ -30,7 +30,6 @@ uidSafe(24);
 app.post("/upload", uploader.single("image"), s3.upload, (req, res) => {
     const { username, title, desc } = req.body;
     const imageUrl = `${s3Url}${req.file.filename}`;
-    console.log(imageUrl);
 
     db.addImage(username, title, desc, imageUrl)
         .then(function({ rows }) {
@@ -41,7 +40,6 @@ app.post("/upload", uploader.single("image"), s3.upload, (req, res) => {
                 url: imageUrl,
                 id: rows[0].id
             });
-            // send image info to client
         })
         .catch(function(err) {
             console.log(err);
@@ -53,7 +51,11 @@ app.use(express.static("./public"));
 app.use(express.json());
 
 app.get("/images", (req, res) => {
-    db.getImages()
+    const { lastImageId } = req.query;
+    const promise = lastImageId
+        ? db.getMoreImages(lastImageId)
+        : db.getImages();
+    promise
         .then(({ rows }) => {
             res.json(rows);
         })
@@ -63,7 +65,7 @@ app.get("/images", (req, res) => {
         });
 });
 
-app.get("/image/:imageId", (req, res) => {
+app.get("/images/:imageId", (req, res) => {
     db.getImageById(req.params.imageId)
         .then(({ rows }) => {
             if (rows.length < 1) {
@@ -78,7 +80,7 @@ app.get("/image/:imageId", (req, res) => {
         });
 });
 
-app.post("/image/:imageId/comment", (req, res) => {
+app.post("/images/:imageId/comment", (req, res) => {
     const { username, message } = req.body;
     db.addComment(req.params.imageId, username, message)
         .then(({ rows }) => {
@@ -94,7 +96,7 @@ app.post("/image/:imageId/comment", (req, res) => {
         });
 });
 
-app.get("/image/:imageId/comments", (req, res) => {
+app.get("/images/:imageId/comments", (req, res) => {
     db.getComments(req.params.imageId)
         .then(({ rows }) => {
             res.json(rows);

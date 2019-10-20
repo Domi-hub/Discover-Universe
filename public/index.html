@@ -1,55 +1,73 @@
 <!doctype html>
 <html>
-<head>
-    <title></title>
-    <link rel="stylesheet" href="stylesheet.css" />
-</head>
-<body>
-    <div id="main">
+    <head>
+        <title>Explore Universe</title>
+        <link rel="stylesheet" href="stylesheet.css" />
+    </head>
+    <body>
+        <div id="main">
+            <header>
+                <h1>Explore Universe</h1>
+            </header>
 
-        <first-component :selected-image="selectedImage" @close="closeMe" v-if="selectedImage"></first-component>
+            <div class="upload">
+                <input v-model="username" name="username" placeholder="Username">
+                <input v-model="title" name="title" placeholder="Title">
+                <input v-model="description" name="description" placeholder="Description">
+                <input class ="file" type="file" accept="image/*" @change="fileSelected">
+                <button @click="upload">Upload</button>
+            </div>
 
-        <input v-model="username" name="username" placeholder="username">
-        <input v-model="title" name="title" placeholder="title">
-        <input v-model="desc" name="description" pleaceholder="description">
-        <input type="file" accept="image/*" @change="fileSelected">
-        <button @click="upload">upload</button>
+            <div class="card-container">
+                <div v-for="image in images">
+                    <div class="card">
+                        <!-- <img @click="selectedImageId=image.id" :src="image.url" /> -->
+                        <a :href="'#' + image.id">
+                            <img :src="image.url"/>
+                        </a>
+                        <div class="info">
+                            {{image.title}}
+                        </div>
 
-        <div>
-            <img @click="selectedImage=image.id" v-for="image in images" :src="image.url" />
+                    </div>
+                </div>
+            </div>
+
+            <button class="more-button" @click="more" v-if="hasMoreImages">More</button>
+
+            <first-component :selected-image-id="selectedImageId" @close="closeMe" v-if="selectedImageId"></first-component>
+
+            <footer>Dominika Tazikova</footer>
         </div>
 
-    </div>
+        <script type="text/x-template" id="template">
+            <div class="component">
+                <button class="x" @click="close">X</button>
+                <div class="image-info">
+                    <h1 class="modal-title"> {{image.title}}</h1>
+                    <img class="modal-img" :src="image.url">
+                    <p> {{ image.description }} </p>
+                    <p class="modal-username"> {{ image.username }} </p>
+                    <p> {{ image.created_at }} </p>
+                </div>
 
-    <script type="text/x-template" id="template">
+                <div class="comments-info">
+                    <h1>Add a Comment!</h1>
+                    <input type="text" v-model="username" name="username" placeholder="username">
+                    <input type="text" v-model="message" name="message" placeholder="message">
+                    <button @click="submitComment">Submit</button>
+                </div>
 
-        <div class="component">
-            <div>
-                <button @click="close">X</button>
-                <h1> {{ image.title }}</h1>
-                <img :src="image.url">
-                <p> {{ image.description }} </p>
-                <p> {{ image.username }} </p>
-                <p> {{ image.created_at }} </p>
+                <div class="comment-message" v-for="comment in comments">
+                    <p> {{ comment.message }} </p>
+                    <p> {{ comment.username }} </p>
+                    <p> {{ comment.created_at }} </p>
+                </div>
             </div>
+        </script>
 
-            <div>
-                <h1>Add a Comment!</h1>
-                <input type="text" v-model="username" name="username" placeholder="username">
-                <input type="text" v-model="message" name="message" placeholder="message">
-                <button @click="submitComment">Submit</button>
-            </div>
-
-            <div v-for="comment in comments">
-                <p> {{ comment.message }} </p>
-                <p> {{ comment.username }} </p>
-                <p> {{ comment.created_at }} </p>
-            </div>
-        </div>
-    </script>
-
-    <script src="/js/vue.js"></script>
-    <script src="/js/axios.min.js"></script>
-    <script src="/js/script.js"></script>
-</body>
+        <script src="/js/vue.js"></script>
+        <script src="/js/axios.min.js"></script>
+        <script src="/js/script.js"></script>
+    </body>
 </html>
