@@ -26,7 +26,7 @@ INSERT INTO images (url, username, title, description) VALUES (
 ), (
     'https://s3.amazonaws.com/spicedling/ATs7h_R9xEffHkIvlypff_pzf0Z0aU4H.jpg',
     'funky',
-    'Uranius',
+    'Uranus',
     'Uranus is blue-green in color, as a result of the methane in its mostly hydrogen-helium atmosphere. The planet is often dubbed an ice giant, since at least 80% of its mass is a fluid mix of water, methane and ammonia ice.'
 ), (
     'https://s3.amazonaws.com/spicedling/xJfO_Z-98nioIjCY43LTXint5H92j1K8.png',
