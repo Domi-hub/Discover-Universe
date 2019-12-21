@@ -9,3 +9,7 @@ Discover Universe is an educational website where users can learn about the univ
 - GRID
 - HTML
 - AWS
+
+![](gifs/upload.gif)
+![](gifs/comments.gif)
+![](gifs/morebutton.gif)
