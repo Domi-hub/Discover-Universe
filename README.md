@@ -10,6 +10,14 @@ Discover Universe is an educational website where users can learn about the univ
 - HTML
 - AWS
 
+**Upload Picture:**
+
 ![](gifs/upload.gif)
+
+**Add Comment to Picture:**
+
 ![](gifs/comments.gif)
+
+**Show More Pictures:**
+
 ![](gifs/morebutton.gif)
